@@ -11,7 +11,7 @@ const LandingPage = () => {
         <div className="flex items-center space-x-6">
           <div className="flex items-center">
             <Sparkles className="h-6 w-6 text-purple-600" />
-            <span className="ml-2 font-bold text-xl">Neural AI</span>
+            <span className="ml-2 font-bold text-xl">Neural 4orce</span>
           </div>
           <div className="space-x-4">
             <a href="#" className="text-gray-600 hover:text-gray-900">Features</a>
