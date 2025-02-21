@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import './TryOn.css';
 
 const Home = () => {
   return (
@@ -9,7 +10,6 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <div className="max-w-lg">
-              <img src="./assets/LOGO.svg" alt="Logo" className="h-12 mb-4" />
               <h1 className="text-4xl font-bold text-gray-900 mb-4">
                 Trending Styles, Curated Just for You
               </h1>
@@ -42,18 +42,16 @@ const Home = () => {
             Currently Trending Outfits
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              "./assets/shirts/b_shirt.jpg",
-              "./assets/shirts/r_shirt.png",
-              "./assets/shirts/w_hoodie.png",
-              "./assets/shirts/w_shirt.jpg",
-              "./assets/shirts/y_hoodie.png",
-              "./assets/shirts/y_jacket.png"
-            ].map((item, index) => (
-              <div key={index} className="bg-gray-100 rounded-lg overflow-hidden">
+            {[1, 2, 3, 4].map((item) => (
+              <div
+                key={item}
+                className="bg-gray-100 rounded-lg overflow-hidden"
+              >
                 <img
-                  src={item}
-                  alt={`Trending outfit ${index + 1}`}
+                  src={`https://images.unsplash.com/photo-${
+                    item + 1500000000000
+                  }-abcdef123456?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80`}
+                  alt={`Trending outfit ${item}`}
                   className="w-full h-64 object-cover"
                 />
               </div>
@@ -113,3 +111,5 @@ const Home = () => {
     </div>
   );
 };
+
+export default Home;
