@@ -1,38 +1,23 @@
-import React, { useState, useRef } from "react";
-import { Canvas } from "@react-three/fiber";
-import {
-  OrbitControls,
-  useGLTF,
-  Environment,
-  SpotLight,
-} from "@react-three/drei";
-import { Upload } from "lucide-react";
+import React, { useState, useRef, useEffect } from 'react';
+import Papa from 'papaparse';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, useGLTF, Environment } from '@react-three/drei';
+import { Upload } from 'lucide-react';
+import './TryOn.css';
 
-const predefinedModels = {
-  white_black: "https://models.readyplayer.me/67b8899ad1a93b4ffdbcc76d.glb",
-  white_baggy: "https://models.readyplayer.me/67b889f256b46da91d4293f4.glb",
-  white_baggy1: "https://models.readyplayer.me/67b88a485f9326866f3bdec7.glb",
-  white_blue: "https://models.readyplayer.me/67b88b13e8245fd4a6858939.glb",
-  yellow_black: "https://models.readyplayer.me/67b88d3425d68eb3481f6145.glb",
-  yellow_baggy: "https://models.readyplayer.me/67b88b757e6657900e9faf89.glb",
-  yellow_baggy1: "https://models.readyplayer.me/67b88ca14407c822fc368627.glb",
-  yellow_blue: "https://models.readyplayer.me/67b892609f7709fca5d69851.glb",
-  black_black: "https://models.readyplayer.me/67b88f4f9891b9ec677968d6.glb",
-  black_baggy: "https://models.readyplayer.me/67b891b77d64a20c3a8eb235.glb",
-  black_baggy1: "https://models.readyplayer.me/67b8900cc3487873b845e1df.glb",
-  black_blue: "https://models.readyplayer.me/67b8905da4ef95d2eb02bcd4.glb",
-  y_jacket_black: "https://models.readyplayer.me/67b88fad5c5523e1d09b75e8.glb",
-  y_jacket_baggy: "https://models.readyplayer.me/67b88e57c84a3c5b86a8626c.glb",
-  y_jacket_baggy1: "https://models.readyplayer.me/67b890852fbdb6b530f7b476.glb",
-  y_jacket_blue: "https://models.readyplayer.me/67b88ecdc3487873b845e006.glb",
-  red_black: "https://models.readyplayer.me/67b89105b6e5c107ca48a8c4.glb",
-  red_baggy: "https://models.readyplayer.me/67b892ddb9c9b61825493795.glb",
-  red_baggy1: "https://models.readyplayer.me/67b8934b5a88dd021eac5d00.glb",
-  red_blue: "https://models.readyplayer.me/67b8919496dac0e22d34eff3.glb",
-  neon_black: "https://models.readyplayer.me/67b89151cbca3ce8c758214c.glb",
-  neon_baggy: "https://models.readyplayer.me/67b892a26ca77a3b93ddf9fb.glb",
-  neon_baggy1: "https://models.readyplayer.me/67b893008d7b6de4aea17f95.glb",
-  neon_blue: "https://models.readyplayer.me/67b891d3a620b5a3e4b042df.glb",
+const modelMapping = {};
+
+const loadModelMapping = () => {
+  Papa.parse('/src/assets/Book1.csv', {
+    download: true,
+    header: true,
+    complete: (results) => {
+      results.data.forEach(row => {
+        const key = `${row.shirt}_${row.pant}`;
+        modelMapping[key] = row.url;
+      });
+    }
+  });
 };
 
 const Model = ({ modelPath }) => {
@@ -40,65 +25,152 @@ const Model = ({ modelPath }) => {
   return <primitive object={scene} scale={1.5} />;
 };
 
+const UploadBox = ({ type, onFileSelect, preview, inputRef }) => {
+  const handleClick = () => {
+    inputRef.current?.click();
+  };
+
+  return (
+    <div className="upload-box" onClick={handleClick}>
+      <div className="upload-content">
+        {preview ? (
+          <div className="w-32 h-32 relative">
+            <img 
+              src={preview} 
+              alt={`${type} preview`} 
+              className="w-full h-full object-cover rounded-lg"
+            />
+          </div>
+        ) : (
+          <>
+            <Upload className="upload-icon" />
+            <div className="upload-text">
+              <span className="upload-text-primary">
+                Click or drag to upload {type}
+              </span>
+              <span className="upload-text-secondary">
+                Supported formats: JPG, PNG
+              </span>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const TryOn = () => {
   const [shirt, setShirt] = useState(null);
   const [pant, setPant] = useState(null);
   const [modelPath, setModelPath] = useState(null);
-  const outfitInputRef = useRef(null);
-  const photoInputRef = useRef(null);
+  const [shirtPreview, setShirtPreview] = useState(null);
+  const [pantPreview, setPantPreview] = useState(null);
+  const shirtInputRef = useRef(null);
+  const pantInputRef = useRef(null);
+
+  useEffect(() => {
+    loadModelMapping();
+  }, []);
 
   const handleFileInput = (e, type) => {
     const file = e.target.files?.[0];
     if (file) {
-      const imageName = file.name.toLowerCase().split(".")[0];
-      if (type === "shirt") setShirt(imageName);
-      else setPant(imageName);
-    }
-  };
-
-  const handleGenerate = () => {
-    if (shirt && pant) {
-      const key = `${shirt}_${pant}`;
-      if (predefinedModels[key]) {
-        setModelPath(predefinedModels[key]);
+      const imageName = file.name.toLowerCase().replace(/\.[^/.]+$/, "").trim();
+      
+      // Create preview URL
+      const previewUrl = URL.createObjectURL(file);
+      
+      if (type === "shirt") {
+        setShirt(imageName);
+        setShirtPreview(previewUrl);
+      } else {
+        setPant(imageName);
+        setPantPreview(previewUrl);
       }
     }
   };
 
+  const handleGenerate = () => {
+    if (!shirt || !pant) {
+      alert("Please upload both a shirt and a pant image.");
+      return;
+    }
+  
+    const key = `${shirt}_${pant}`.trim();
+    console.log("Generated Key:", key);
+  
+    if (modelMapping[key]) {
+      setModelPath(modelMapping[key]);
+    } else {
+      alert("No matching model found for the selected combination.");
+    }
+  };
+
+  // Cleanup preview URLs when component unmounts
+  useEffect(() => {
+    return () => {
+      if (shirtPreview) URL.revokeObjectURL(shirtPreview);
+      if (pantPreview) URL.revokeObjectURL(pantPreview);
+    };
+  }, []);
+
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-bold text-center mb-12">Virtual Try-On</h1>
+    <div className="try-on-container">
+      <div className="content-wrapper">
+        <h1 className="title">Virtual Try-On Experience</h1>
+        
+        <div className="upload-section">
+          <div>
+            <input
+              ref={shirtInputRef}
+              type="file"
+              onChange={(e) => handleFileInput(e, 'shirt')}
+              accept="image/*"
+              style={{ display: 'none' }}
+            />
+            <UploadBox 
+              type="shirt"
+              preview={shirtPreview}
+              inputRef={shirtInputRef}
+            />
+          </div>
 
-      <input
-        type="file"
-        accept="image/*"
-        onChange={(e) => handleFileInput(e, "shirt")}
-      />
-      <input
-        type="file"
-        accept="image/*"
-        onChange={(e) => handleFileInput(e, "pant")}
-      />
+          <div>
+            <input
+              ref={pantInputRef}
+              type="file"
+              onChange={(e) => handleFileInput(e, 'pant')}
+              accept="image/*"
+              style={{ display: 'none' }}
+            />
+            <UploadBox 
+              type="pants"
+              preview={pantPreview}
+              inputRef={pantInputRef}
+            />
+          </div>
+        </div>
 
-      <button onClick={handleGenerate} disabled={!shirt || !pant}>
-        Generate
-      </button>
+        <button 
+          className="generate-button" 
+          onClick={handleGenerate} 
+          disabled={!shirt || !pant}
+        >
+          Generate 3D Model
+        </button>
 
-      {modelPath && (
-        <Canvas>
-          <ambientLight intensity={1.5} />
-          <directionalLight intensity={2.5} position={[2, 2, 2]} />
-          <SpotLight
-            position={[5, 5, 5]}
-            angle={0.3}
-            penumbra={1}
-            intensity={3}
-          />
-          <Environment preset="city" />
-          <OrbitControls />
-          <Model modelPath={modelPath} />
-        </Canvas>
-      )}
+        {modelPath && (
+          <div className="canvas-container">
+            <Canvas>
+              <ambientLight intensity={1.5} />
+              <directionalLight intensity={2.5} position={[2, 2, 2]} />
+              <Environment preset="city" />
+              <OrbitControls />
+              <Model modelPath={modelPath} />
+            </Canvas>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
