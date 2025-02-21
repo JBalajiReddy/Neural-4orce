@@ -1,4 +1,5 @@
 import React from 'react';
+import LOGO from '../assets/LOGO.svg';
 import { useNavigate } from 'react-router-dom';
 import { Sparkles } from 'lucide-react';
 
@@ -7,8 +8,9 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white">
-      <nav className="p-4 flex justify-between items-center">
-        <div className="flex items-center space-x-6">
+      <header className="header p-4 flex justify-between items-center">
+        <img src={LOGO} alt="Company Logo" className="h-12" />
+        <nav className="flex items-center space-x-6">
           <div className="flex items-center">
             <Sparkles className="h-6 w-6 text-purple-600" />
             <span className="ml-2 font-bold text-xl">Neural 4orce</span>
@@ -18,14 +20,14 @@ const LandingPage = () => {
             <a href="#" className="text-gray-600 hover:text-gray-900">About</a>
             <a href="#" className="text-gray-600 hover:text-gray-900">Contact</a>
           </div>
-        </div>
+        </nav>
         <div className="space-x-4">
           <button className="px-4 py-2 text-blue-600 hover:text-blue-700">SignUp</button>
           <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
             Login
           </button>
         </div>
-      </nav>
+      </header>
 
       <div className="container mx-auto px-4 flex items-center justify-between pt-20">
         <div className="max-w-xl">
