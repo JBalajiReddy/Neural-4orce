@@ -27,9 +27,9 @@ This leads to **poor shopping experiences, higher return rates, and disappointed
 ---
 
 ## 🛠️ Tech Stack  
-🎨 **Frontend** – React ⚛️  
+🎨 **Frontend** – React, three.js ⚛️  
 🖥️ **Backend** – Python 🐍  
-🗄️ **Database** – PostgreSQL 🛢️  
+🗄️ **Database** – mongoDB 🛢️  
 📌 **Additional Tools** – Java ☕, AIML 🤖, Figma 🎨, Git 🏗️, Canva 🖌️, Ready Player Me 🧑‍🎨, Unreal Engine 🎮  
 
 ---
