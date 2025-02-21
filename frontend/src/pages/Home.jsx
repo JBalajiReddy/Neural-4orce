@@ -43,17 +43,21 @@ const Home = () => {
           </h2>
 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
       {[
-        "./assets/shirts/b_shirt.jpg",
-        "./assets/shirts/r_shirt.png",
-        "./assets/shirts/w_hoodie.png",
-        "./assets/shirts/w_shirt.jpg",
-        "./assets/shirts/y_hoodie.png",
-        "./assets/shirts/y_jacket.png"
-      ].map((item, index) => (
+  "./src/assets/shirts/b_shirt.jpg",
+  "./src/assets/shirts/r_shirt.png",
+  "./src/assets/shirts/w_hoodie.png",
+  "./src/assets/shirts/w_shirt.jpg",
+  "./src/assets/shirts/y_hoodie.png",
+  "./src/assets/shirts/y_jacket.png",
+  "./src/assets/pants/b_jeans.jpg",
+  "./src/assets/pants/b_pant.jpg",
+  "./src/assets/pants/blue_jeans.jpg",
+  "./src/assets/pants/y_cargo.png"
+].map((item, index) => (
         <div key={index} className="bg-gray-100 rounded-lg overflow-hidden">
           <img
             src={item}
-            alt={`Trending outfit ${index + 1}`} // Fixed alt text
+            alt={Trending outfit ${index + 1}} // Fixed alt text
             className="w-full h-64 object-cover"
           />
         </div>
