@@ -9,10 +9,11 @@ const LandingPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white">
       <header className="header p-4 flex justify-between items-center">
-        <img src={LOGO} alt="Company Logo" className="h-12" />
+       
         <nav className="flex items-center space-x-6">
           <div className="flex items-center">
-            <Sparkles className="h-6 w-6 text-purple-600" />
+            {/* <Sparkles className="h-6 w-3 text-purple-600" /> */}
+            <img src={LOGO} alt="Company Logo" className="h-12" />
             <span className="ml-2 font-bold text-xl">Neural 4orce</span>
           </div>
           <div className="space-x-4">
